@@ -1,22 +1,28 @@
-DetectText
-==========
+# HowToWriteSWT
+How to write fast numerical code project. 
+SWT implementation.
 
-Detect text with stroke width transform.
+Dependencies: OpenCV
 
-Dependencies: OpenCV, (boost).
 
-To compile:
-MAC
+
+========COMPILE========
+make
+
+——MAC——
 g++ $(pkg-config --cflags --libs opencv) src/TextDetection.cpp src/FeaturesMain.cpp -o bin/SWT
 
-LINUX
+——LINUX——
 g++ -o bin/SWT src/TextDetection.cpp src/FeaturesMain.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc
 
-To run:
-./TextDetection input_file dark_on_light
-where dark_on_light is 1 or 0, indicating whether the text is darker or lighter than the background.
 
-TEST:
+========RUN========
+./bin/SWT input_file dark_on_light
+
+(where dark_on_light is 1 or 0, indicating whether the text is darker or lighter than the background.)
+
+
+========TEST========
 ./bin/SWT docs/test.jpg 1
 
 
