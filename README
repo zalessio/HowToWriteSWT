@@ -10,7 +10,7 @@ g++ -o DetectText TextDetection.cpp FeaturesMain.cpp -lopencv_core -lopencv_high
 where /path/to/current/directory is replaced with the absolute path to the current directory.
 
 To run:
-./TextDetection input_file output_file dark_on_light
+./TextDetection input_file dark_on_light
 where dark_on_light is 1 or 0, indicating whether the text is darker or lighter than the background.
 
 GitHub repository:

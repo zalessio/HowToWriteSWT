@@ -82,18 +82,17 @@ int mainTextDetection ( int argc, char * * argv )
   }
 
   // Detect text in the image
-  IplImage * output = textDetection ( byteQueryImage, atoi(argv[3]) );
+  textDetection ( byteQueryImage, atoi(argv[2]) );
+  
   cvReleaseImage ( &byteQueryImage );
-  cvSaveImage ( argv[2], output );
-  cvReleaseImage ( &output );
   return 0;
 }
 
 int main ( int argc, char * * argv )
 {
-  if ( ( argc != 4 ) )
+  if ( ( argc != 3 ) )
   {
-    printf ( "usage: %s imagefile resultImage darkText\n",
+    printf ( "ERROR using: %s !! Not enough input argument:  #imagefile  #darkText \n",
              argv[0] );
 
     return -1;
