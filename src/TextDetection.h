@@ -38,11 +38,6 @@ struct Ray {
         std::vector<Point2d> points;
 };
 
-struct Point3dFloat {
-    float x;
-    float y;
-    float z;
-};
 
 bool Point2dSort (Point2d const & lhs,
                   Point2d const & rhs);

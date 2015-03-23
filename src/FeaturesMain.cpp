@@ -44,6 +44,8 @@ FeatureError ( const std::string & msg, const std::string & file )
 }
 };
 
+
+
 IplImage * loadByteImage ( const char * name )
 {
   IplImage * image = cvLoadImage ( name );
@@ -55,6 +57,8 @@ IplImage * loadByteImage ( const char * name )
   cvCvtColor ( image, image, CV_BGR2RGB );
   return image;
 }
+
+
 
 IplImage * loadFloatImage ( const char * name )
 {
@@ -72,6 +76,8 @@ IplImage * loadFloatImage ( const char * name )
   return floatingImage;
 }
 
+
+
 int mainTextDetection ( int argc, char * * argv )
 {
   IplImage * byteQueryImage = loadByteImage ( argv[1] );
@@ -88,11 +94,13 @@ int mainTextDetection ( int argc, char * * argv )
   return 0;
 }
 
+
+
 int main ( int argc, char * * argv )
 {
   if ( ( argc != 3 ) )
   {
-    printf ( "ERROR using: %s !! Not enough input argument:  #imagefile  #darkText \n",
+    printf ( "ERROR using: %s !! Not correct input argument:  #imagefile  #darkText \n",
              argv[0] );
 
     return -1;

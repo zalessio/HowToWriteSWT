@@ -10,7 +10,7 @@ MAC
 g++ $(pkg-config --cflags --libs opencv) src/TextDetection.cpp src/FeaturesMain.cpp -o bin/SWT
 
 LINUX
-g++ -o DetectText TextDetection.cpp FeaturesMain.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc
+g++ -o bin/SWT src/TextDetection.cpp src/FeaturesMain.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc
 
 To run:
 ./TextDetection input_file dark_on_light
