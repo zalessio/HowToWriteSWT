@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "TextDetection.h"
+#include "CannyEdge.c"
 
 #define PI 3.14159265
 
@@ -76,61 +77,77 @@ void textDetection (IplImage * input, bool dark_on_light)
     assert ( input->nChannels == 3 );
     std::cout << "Running textDetection with dark_on_light " << dark_on_light << std::endl;
     
-
     // Convert to grayscale
-    IplImage * grayImage =
-            cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
+    std::cout << "CREATE IMAGES " << std::endl;
+    int h = input->height;
+    int w = input->width;
+    IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
     cvCvtColor ( input, grayImage, CV_RGB2GRAY );
     
+    struct image grayImg,gaussianImg,edgeImg;
+    grayImg.width = w;
+    grayImg.height = h;
+    grayImg.pixel_data = (unsigned char*)grayImage->imageData;
+    edgeImg.width = w;
+    edgeImg.height = h;
+    edgeImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
+    gaussianImg.width = w;
+    gaussianImg.height = h;
+    gaussianImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));;
 
     // Create Canny Image
-    double threshold_low = 175;
-    double threshold_high = 320;
-    IplImage * edgeImage =
-            cvCreateImage( cvGetSize (input),IPL_DEPTH_8U, 1 );
-    cvCanny(grayImage, edgeImage, threshold_low, threshold_high, 3) ;
+    std::cout << "CANNY EDGE " << std::endl;
+    canny_edge_detect(&grayImg, &edgeImg);
+    
+    IplImage * edgeImage = cvCreateImage( cvGetSize (input),IPL_DEPTH_8U, 1 );
+    edgeImage->imageData = (char *)edgeImg.pixel_data;
     cvSaveImage ( "docs/canny.png", edgeImage);
 
-   
     // Create gradient X, gradient Y
-    IplImage * gaussianImage =
-            cvCreateImage ( cvGetSize(input), IPL_DEPTH_32F, 1);
+    std::cout << "GRADIENT " << std::endl;
+    grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
+    cvCvtColor ( input, grayImage, CV_RGB2GRAY );
+    grayImg.pixel_data = (unsigned char*)grayImage->imageData;
+    IplImage * gradientX = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
+    IplImage * gradientY = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
+    
+    gaussian_noise_reduce(&grayImg, &gaussianImg);
+    gradient_sobel_x_y(&gaussianImg, (unsigned char*)gradientX->imageData , (unsigned char*)gradientY->imageData);
+
+    IplImage * gaussianImage = cvCreateImage ( cvGetSize(input), IPL_DEPTH_32F, 1);
     cvConvertScale (grayImage, gaussianImage, 1./255., 0);
     cvSmooth( gaussianImage, gaussianImage, CV_GAUSSIAN, 5, 5);
-    IplImage * gradientX =
-            cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
-    IplImage * gradientY =
-            cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
-    cvSobel(gaussianImage, gradientX , 1, 0, CV_SCHARR);
-    cvSobel(gaussianImage, gradientY , 0, 1, CV_SCHARR);
+   
+    // cvSobel(gaussianImage, gradientX , 1, 0, CV_SCHARR);
+    // cvSobel(gaussianImage, gradientY , 0, 1, CV_SCHARR);
     cvSmooth(gradientX, gradientX, 3, 3);
     cvSmooth(gradientY, gradientY, 3, 3);
-    cvReleaseImage ( &gaussianImage );
-    cvReleaseImage ( &grayImage );
 
-    
     // Calculate SWT and return ray vectors
+    std::cout << "SWT " << std::endl;
     std::vector<Ray> rays;
-    IplImage * SWTImage =
-            cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
-    for( int row = 0; row < input->height; row++ ){
+    IplImage * SWTImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
+    for(int row = 0; row < h; row++ ){
         float* ptr = (float*)(SWTImage->imageData + row * SWTImage->widthStep);
-        for ( int col = 0; col < input->width; col++ ){
+        for ( int col = 0; col < w; col++ ){
             *ptr++ = -1;
         }
     }
     strokeWidthTransform ( edgeImage, gradientX, gradientY, dark_on_light, SWTImage, rays );
     SWTMedianFilter ( SWTImage, rays );
 
-    IplImage * output2 =
-            cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
+
+    IplImage * output2 = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
     normalizeImage (SWTImage, output2);
-    IplImage * saveSWT =
-            cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
+    IplImage * saveSWT = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
     cvConvertScale(output2, saveSWT, 255, 0);
     cvSaveImage ( "docs/SWT.png", saveSWT);
+    
     cvReleaseImage ( &output2 );
     cvReleaseImage( &saveSWT );
+    cvReleaseImage ( &SWTImage );
+    cvReleaseImage ( &grayImage );
+    cvReleaseImage ( &edgeImage );
 
 }
 

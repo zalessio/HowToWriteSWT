@@ -20,6 +20,7 @@
 #define TEXTDETECTION_H
 
 #include <opencv/cv.h>
+    
 
 struct Point2d {
     int x;
@@ -36,6 +37,12 @@ struct Ray {
         Point2d p;
         Point2d q;
         std::vector<Point2d> points;
+};
+
+struct image {
+  int width;
+  int height;
+  unsigned char * pixel_data;
 };
 
 
