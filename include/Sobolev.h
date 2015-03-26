@@ -86,11 +86,14 @@ void gradient_sobel_magnitudo_direction(struct image * img_in, int *g , int *dir
 	}	
 }
 
-void gradient_sobel_x_y(struct image * img_in, unsigned char * g_x , unsigned char *g_y) {
+void gradient_sobel_x_y(struct image * img_in, struct image * gradientX,struct image * gradientY) {
 	int w, h, x, y, max_x, max_y;
 
 	w = img_in->width;
 	h = img_in->height;
+	unsigned char * g_x = gradientX->pixel_data;
+	unsigned char *g_y = gradientY->pixel_data;
+	
 	max_x = w - 3;
 	max_y = w * (h - 3);
 	for (y = w * 3; y < max_y; y += w) {

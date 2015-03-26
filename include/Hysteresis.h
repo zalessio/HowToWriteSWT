@@ -45,8 +45,8 @@ int trace(int x, int y, int low, struct image * img_in, struct image * img_out)
 void hysteresis (int high, int low, struct image * img_in, struct image * img_out)
 {
 	int x, y, n, max,w,h;
-	w = img_out->width;
-	h = img_out->height;
+	w = img_in->width;
+	h = img_in->height;
 	max =  w*h;
 
 	for (n = 0; n < max; n++) {

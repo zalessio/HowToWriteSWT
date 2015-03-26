@@ -70,7 +70,7 @@ void canny_edge_detect(struct image * img_in, struct image * img_out) {
 	
 	printf("*** performing non-maximum suppression ***\n");
 	non_max_suppression(&img_scratch, g, dir);
-	
+
 	printf("*** performing treshold ***\n");
 	estimate_threshold(&img_scratch, &high, &low);
 

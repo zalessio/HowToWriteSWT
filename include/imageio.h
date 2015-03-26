@@ -163,4 +163,20 @@ void convertImg(IplImage * input, struct image *output){
     output->pixel_data = (unsigned char*)grayImage->imageData;
 }
 
+void save_img(char * s, struct image *input){
+    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_8U, 1 );
+    output->imageData = (char *)input->pixel_data;
+    cvSaveImage ( s, output);
+    cvReleaseImage(&output);
+}
+
+void save_and_convert_img(char * s, struct image *input){
+    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_8U, 1 );
+    output->imageData = (char *)input->pixel_data;
+    normalizeImage (output, output);
+    cvConvertScale(output, output, 255, 0);
+    cvSaveImage ( s, output);
+    cvReleaseImage(&output);
+}
+
 #endif
