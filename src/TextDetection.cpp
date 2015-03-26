@@ -70,30 +70,41 @@ void normalizeImage (IplImage * input, IplImage * output) {
     }
 }
 
+void convertImg(IplImage * input, struct image *output){
+
+    std::cout << "CREATE IMAGES " << std::endl;
+    // Convert to grayscale
+
+    IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
+    cvCvtColor ( input, grayImage, CV_RGB2GRAY );
+    
+    
+    output.width = w;
+    output.height = h;
+    output.pixel_data = (unsigned char*)grayImage->imageData;
+}
+
 
 void textDetection (IplImage * input, bool dark_on_light)
-{
+{   
+
     assert ( input->depth == IPL_DEPTH_8U );
     assert ( input->nChannels == 3 );
     std::cout << "Running textDetection with dark_on_light " << dark_on_light << std::endl;
     
-    // Convert to grayscale
-    std::cout << "CREATE IMAGES " << std::endl;
-    int h = input->height;
-    int w = input->width;
-    IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
-    cvCvtColor ( input, grayImage, CV_RGB2GRAY );
-    
+
+    int h,w;
+
     struct image grayImg,gaussianImg,edgeImg;
-    grayImg.width = w;
-    grayImg.height = h;
-    grayImg.pixel_data = (unsigned char*)grayImage->imageData;
+    
+    void convertImg(input, &grayImg)
+    
+    h = grayImg.height;
+    w = grayImg.width;
+    
     edgeImg.width = w;
     edgeImg.height = h;
     edgeImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
-    gaussianImg.width = w;
-    gaussianImg.height = h;
-    gaussianImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));;
 
     // Create Canny Image
     std::cout << "CANNY EDGE " << std::endl;
@@ -102,6 +113,11 @@ void textDetection (IplImage * input, bool dark_on_light)
     IplImage * edgeImage = cvCreateImage( cvGetSize (input),IPL_DEPTH_8U, 1 );
     edgeImage->imageData = (char *)edgeImg.pixel_data;
     cvSaveImage ( "docs/canny.png", edgeImage);
+
+
+    gaussianImg.width = w;
+    gaussianImg.height = h;
+    gaussianImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
 
     // Create gradient X, gradient Y
     std::cout << "GRADIENT " << std::endl;
