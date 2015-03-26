@@ -79,9 +79,9 @@ void convertImg(IplImage * input, struct image *output){
     cvCvtColor ( input, grayImage, CV_RGB2GRAY );
     
     
-    output.width = w;
-    output.height = h;
-    output.pixel_data = (unsigned char*)grayImage->imageData;
+    output->width = input->width;
+    output->height = input->height;
+    output->pixel_data = (unsigned char*)grayImage->imageData;
 }
 
 
@@ -97,7 +97,7 @@ void textDetection (IplImage * input, bool dark_on_light)
 
     struct image grayImg,gaussianImg,edgeImg;
     
-    void convertImg(input, &grayImg)
+    convertImg(input, &grayImg);
     
     h = grayImg.height;
     w = grayImg.width;
@@ -121,21 +121,21 @@ void textDetection (IplImage * input, bool dark_on_light)
 
     // Create gradient X, gradient Y
     std::cout << "GRADIENT " << std::endl;
-    grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
+     IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
     cvCvtColor ( input, grayImage, CV_RGB2GRAY );
     grayImg.pixel_data = (unsigned char*)grayImage->imageData;
     IplImage * gradientX = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
     IplImage * gradientY = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_32F, 1 );
     
-    gaussian_noise_reduce(&grayImg, &gaussianImg);
-    gradient_sobel_x_y(&gaussianImg, (unsigned char*)gradientX->imageData , (unsigned char*)gradientY->imageData);
+    //gaussian_noise_reduce(&grayImg, &gaussianImg);
+    //gradient_sobel_x_y(&gaussianImg, (unsigned char*)gradientX->imageData , (unsigned char*)gradientY->imageData);
 
     IplImage * gaussianImage = cvCreateImage ( cvGetSize(input), IPL_DEPTH_32F, 1);
     cvConvertScale (grayImage, gaussianImage, 1./255., 0);
     cvSmooth( gaussianImage, gaussianImage, CV_GAUSSIAN, 5, 5);
    
-    // cvSobel(gaussianImage, gradientX , 1, 0, CV_SCHARR);
-    // cvSobel(gaussianImage, gradientY , 0, 1, CV_SCHARR);
+    cvSobel(gaussianImage, gradientX , 1, 0, CV_SCHARR);
+    cvSobel(gaussianImage, gradientY , 0, 1, CV_SCHARR);
     cvSmooth(gradientX, gradientX, 3, 3);
     cvSmooth(gradientY, gradientY, 3, 3);
 
