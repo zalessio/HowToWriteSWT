@@ -19,62 +19,8 @@
 */
 #include <cassert>
 #include <fstream>
-#include "TextDetection.h"
-#include <opencv/highgui.h>
-#include <exception>
-
-void convertToFloatImage ( IplImage * byteImage, IplImage * floatImage )
-{
-  cvConvertScale ( byteImage, floatImage, 1 / 255., 0 );
-}
-
-class FeatureError : public std::exception
-{
-std::string message;
-public:
-FeatureError ( const std::string & msg, const std::string & file )
-{
-  std::stringstream ss;
-
-  ss << msg << " " << file;
-  message = msg.c_str ();
-}
-~FeatureError () throw ( )
-{
-}
-};
-
-
-
-IplImage * loadByteImage ( const char * name )
-{
-  IplImage * image = cvLoadImage ( name );
-
-  if ( !image )
-  {
-    return 0;
-  }
-  cvCvtColor ( image, image, CV_BGR2RGB );
-  return image;
-}
-
-
-
-IplImage * loadFloatImage ( const char * name )
-{
-  IplImage * image = cvLoadImage ( name );
-
-  if ( !image )
-  {
-    return 0;
-  }
-  cvCvtColor ( image, image, CV_BGR2RGB );
-  IplImage * floatingImage = cvCreateImage ( cvGetSize ( image ),
-                                             IPL_DEPTH_32F, 3 );
-  cvConvertScale ( image, floatingImage, 1 / 255., 0 );
-  cvReleaseImage ( &image );
-  return floatingImage;
-}
+#include "../include/imageio.h"
+#include "../include/TextDetection.h" 
 
 
 
@@ -93,7 +39,6 @@ int mainTextDetection ( int argc, char * * argv )
   cvReleaseImage ( &byteQueryImage );
   return 0;
 }
-
 
 
 int main ( int argc, char * * argv )
