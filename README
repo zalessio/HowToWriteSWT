@@ -2,7 +2,7 @@
 How to write fast numerical code project. 
 SWT implementation.
 
-========COMPILE========
+========COMPILE======== (take the makefile from the directory of the version you prefer)
 —— MAC——
 make mac_swt
 
@@ -14,9 +14,10 @@ make linux_swt
 (g++ -o bin/SWT src/TextDetection.cpp src/FeaturesMain.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc)
 
 
-========RUN========
-./bin/SWT input_file dark_on_light
+========RUN======== 
+./VERSION/bin/SWT imgs/inputFileName dark_on_light
 
+(the VERSION you prefer)
 (where dark_on_light is 1 or 0, indicating whether the text is darker or lighter than the background.)
 
 
