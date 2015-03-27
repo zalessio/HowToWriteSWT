@@ -47,14 +47,14 @@ void textDetection (IplImage * input, bool dark_on_light)
     //Canny Image
     printf("CANNY EDGE\n");
     canny_edge_detect(&grayImg, &edgeImg);
-    save_img((char *)"imgs/canny.png",&edgeImg);
+    save_img((char *)"imgs/DEFAULT_canny.png",&edgeImg);
 
     convertImg(input, &grayImg);
     //SWT 
     printf("SWT\n");
     strokeWidthTransform(&grayImg,&edgeImg,dark_on_light,&swtImg);
 
-    save_img((char *)"imgs/SWT.png",&swtImg);
+    save_img((char *)"imgs/DEFAULT_SWT.png",&swtImg);
 
 }
 
