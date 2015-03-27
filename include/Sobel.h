@@ -1,5 +1,5 @@
-#ifndef SOBOLEV_H_
-#define SOBOLEV_H_
+#ifndef SOBEL_H_
+#define SOBEL_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,31 +86,30 @@ void gradient_sobel_magnitudo_direction(struct image * img_in, int *g , int *dir
 	}	
 }
 
-void gradient_sobel_x_y(struct image * img_in, struct image * gradientX,struct image * gradientY) {
+void gradient_sobel_x_y(struct image * img_in, float *g_x, float *g_y) {
 	int w, h, x, y, max_x, max_y;
 
 	w = img_in->width;
 	h = img_in->height;
-	unsigned char * g_x = gradientX->pixel_data;
-	unsigned char *g_y = gradientY->pixel_data;
 	
 	max_x = w - 3;
 	max_y = w * (h - 3);
 	for (y = w * 3; y < max_y; y += w) {
 		for (x = 3; x < max_x; x++) {
 			
-			g_x[x + y]  = (2 * img_in->pixel_data[x + y + 1] 
+			g_x[x + y]  = 2 * img_in->pixel_data[x + y + 1] 
 				+ img_in->pixel_data[x + y - w + 1]
 				+ img_in->pixel_data[x + y + w + 1]
 				- 2 * img_in->pixel_data[x + y - 1] 
 				- img_in->pixel_data[x + y - w - 1]
-				- img_in->pixel_data[x + y + w - 1]);
-			g_y[x + y]  = 2 * img_in->pixel_data[x + y - w] 
-				+ img_in->pixel_data[x + y - w + 1]
-				+ img_in->pixel_data[x + y - w - 1]
-				- 2 * img_in->pixel_data[x + y + w] 
-				- img_in->pixel_data[x + y + w + 1]
 				- img_in->pixel_data[x + y + w - 1];
+
+			g_y[x + y]  = - 2 * img_in->pixel_data[x + y - w] 
+				- img_in->pixel_data[x + y - w + 1]
+				- img_in->pixel_data[x + y - w - 1]
+				+ 2 * img_in->pixel_data[x + y + w] 
+				+ img_in->pixel_data[x + y + w + 1]
+				+ img_in->pixel_data[x + y + w - 1];
 
 		}
 		

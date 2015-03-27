@@ -53,4 +53,61 @@ void gaussian_noise_reduce(struct image * img_in, struct image * img_out)
 	}
 }
 
+void gaussian_noise_reduce_float_5(float * img_in, float * img_out, int h, int w)
+{
+	int x, y, max_x, max_y;
+	max_x = w - 2;
+	max_y = w * (h - 2);
+	for (y = w * 2; y < max_y; y += w) {
+		for (x = 2; x < max_x; x++) {
+			img_out[x + y] = (2 * img_in[x + y - 2 - w - w] + 
+			4 * img_in[x + y - 1 - w - w] + 
+			5 * img_in[x + y - w - w] + 
+			4 * img_in[x + y + 1 - w - w] + 
+			2 * img_in[x + y + 2 - w - w] + 
+			4 * img_in[x + y - 2 - w] + 
+			9 * img_in[x + y - 1 - w] + 
+			12 * img_in[x + y - w] + 
+			9 * img_in[x + y + 1 - w] + 
+			4 * img_in[x + y + 2 - w] + 
+			5 * img_in[x + y - 2] + 
+			12 * img_in[x + y - 1] + 
+			15 * img_in[x + y] + 
+			12 * img_in[x + y + 1] + 
+			5 * img_in[x + y + 2] + 
+			4 * img_in[x + y - 2 + w] + 
+			9 * img_in[x + y - 1 + w] + 
+			12 * img_in[x + y + w] + 
+			9 * img_in[x + y + 1 + w] + 
+			4 * img_in[x + y + 2 + w] + 
+			2 * img_in[x + y - 2 + w + w] + 
+			4 * img_in[x + y - 1 + w + w] + 
+			5 * img_in[x + y + w + w] + 
+			4 * img_in[x + y + 1 + w + w] + 
+			2 * img_in[x + y + 2 + w + w]) / 159;
+		}
+	}
+}
+
+void gaussian_noise_reduce_float_3(float * img_in, float * img_out, int h, int w)
+{
+	int x, y, max_x, max_y;
+	max_x = w - 2;
+	max_y = w * (h - 2);
+	for (y = w * 2; y < max_y; y += w) {
+		for (x = 2; x < max_x; x++) {
+			img_out[x + y] = (
+			1 * img_in[x + y - 1 - w] + 
+			2 * img_in[x + y - w] + 
+			1 * img_in[x + y + 1 - w] + 
+			2 * img_in[x + y - 1] + 
+			4 * img_in[x + y] + 
+			2 * img_in[x + y + 1] + 
+			1 * img_in[x + y - 1 + w] + 
+			2 * img_in[x + y + w] + 
+			1 * img_in[x + y + 1 + w] ) / 16;
+		}
+	}
+}
+
 #endif

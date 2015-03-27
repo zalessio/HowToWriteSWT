@@ -6,26 +6,68 @@
 #include <utility>
 #include <algorithm>
 #include <vector>
+#include <cmath>
 
+#include "Sobel.h"
+#include "Gauss.h"
 #include "../include/imageio.h"
 
 
 #define PI 3.14159265
 
+void SWTMedianFilter (struct image * SWTImg, std::vector<Ray> & rays) {
 
+    int h = SWTImg->height;
+    int w = SWTImg->width;
 
-void strokeWidthTransform (IplImage * edgeImage,
-                           IplImage * gradientX,
-                           IplImage * gradientY,
+    for (std::vector<Ray>::iterator rit = rays.begin(); rit != rays.end(); rit++) {
+        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
+            pit->SWT = SWTImg->pixel_data[pit->y+w*pit->x];
+        }
+        std::sort(rit->points.begin(), rit->points.end(), &Point2dSort);
+        float median = (rit->points[rit->points.size()/2]).SWT;
+        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
+            SWTImg->pixel_data[pit->y+w*pit->x] = std::min(pit->SWT, median);
+        }
+    }
+
+}
+
+void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
                            bool dark_on_light,
-                           IplImage * SWTImage,
-                           std::vector<Ray> & rays) {
-    // First pass
+                           struct image * SWTImg) {
+
+    std::vector<Ray> rays;
+    int h = grayImg->height;
+    int w = grayImg->width;
+
+    struct image gaussianImg;
+    gaussianImg.width = w;
+    gaussianImg.height = h;
+    gaussianImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
+    float * gradientXtemp = (float *)malloc(w * h * sizeof(float));
+    float * gradientYtemp = (float *)malloc(w * h * sizeof(float));
+    float * gradientX = (float *)malloc(w * h * sizeof(float));
+    float * gradientY = (float *)malloc(w * h * sizeof(float));
+
+    printf("*** performing gradient ***\n");
+    gaussian_noise_reduce(grayImg, &gaussianImg);
+    gradient_sobel_x_y(&gaussianImg, gradientXtemp , gradientYtemp);
+    gaussian_noise_reduce_float_5(gradientXtemp,gradientX,h,w);
+    gaussian_noise_reduce_float_5(gradientYtemp,gradientY,h,w);
+    
+    printf("*** initializin SWT image ***\n");
+    for(int y = 0; y < h; y++ ){
+        for (int x = 0; x < w; x++ ){
+            SWTImg->pixel_data[x+w*y] = 255;
+        }
+    }
+    
+    printf("*** finding rays ***\n");
     float prec = .05;
-    for( int row = 0; row < edgeImage->height; row++ ){
-        const uchar* ptr = (const uchar*)(edgeImage->imageData + row * edgeImage->widthStep);
-        for ( int col = 0; col < edgeImage->width; col++ ){
-            if (*ptr > 0) {
+    for( int row = 0; row < h; row++ ){
+        for ( int col = 0; col < w; col++ ){
+            if (edgeImg->pixel_data[row*w + col] > 0) {
                 Ray r;
 
                 Point2d p;
@@ -37,10 +79,11 @@ void strokeWidthTransform (IplImage * edgeImage,
 
                 float curX = (float)col + 0.5;
                 float curY = (float)row + 0.5;
+                
                 int curPixX = col;
                 int curPixY = row;
-                float G_x = CV_IMAGE_ELEM ( gradientX, float, row, col);
-                float G_y = CV_IMAGE_ELEM ( gradientY, float, row, col);
+                float G_x = gradientX[col+w*row];
+                float G_y = gradientY[col+w*row];
                 // normalize gradient
                 float mag = sqrt( (G_x * G_x) + (G_y * G_y) );
                 if (dark_on_light){
@@ -51,26 +94,31 @@ void strokeWidthTransform (IplImage * edgeImage,
                     G_y = G_y/mag;
 
                 }
+
                 while (true) {
                     curX += G_x*prec;
                     curY += G_y*prec;
+                    //printf("G_y %d Gy %d\n",G_x,G_y);
                     if ((int)(floor(curX)) != curPixX || (int)(floor(curY)) != curPixY) {
+
+
                         curPixX = (int)(floor(curX));
                         curPixY = (int)(floor(curY));
                         // check if pixel is outside boundary of image
-                        if (curPixX < 0 || (curPixX >= SWTImage->width) || curPixY < 0 || (curPixY >= SWTImage->height)) {
+                        if (curPixX < 0 || (curPixX >= w) || curPixY < 0 || (curPixY >= h)) {
                             break;
                         }
+
                         Point2d pnew;
                         pnew.x = curPixX;
                         pnew.y = curPixY;
                         points.push_back(pnew);
 
-                        if (CV_IMAGE_ELEM ( edgeImage, uchar, curPixY, curPixX) > 0) {
+                        if (edgeImg->pixel_data[curPixY*w+curPixX] > 0) {
                             r.q = pnew;
                             // dot product
-                            float G_xt = CV_IMAGE_ELEM(gradientX,float,curPixY,curPixX);
-                            float G_yt = CV_IMAGE_ELEM(gradientY,float,curPixY,curPixX);
+                            float G_xt = gradientX[curPixY*w+curPixX];
+                            float G_yt = gradientY[curPixY*w+curPixX];
                             mag = sqrt( (G_xt * G_xt) + (G_yt * G_yt) );
                             if (dark_on_light){
                                 G_xt = -G_xt/mag;
@@ -78,17 +126,12 @@ void strokeWidthTransform (IplImage * edgeImage,
                             } else {
                                 G_xt = G_xt/mag;
                                 G_yt = G_yt/mag;
-
                             }
 
-                            if (acos(G_x * -G_xt + G_y * -G_yt) < PI/2.0 ) {
+                            if (acos(G_x * -G_xt + G_y * -G_yt) < PI/2.0) {
                                 float length = sqrt( ((float)r.q.x - (float)r.p.x)*((float)r.q.x - (float)r.p.x) + ((float)r.q.y - (float)r.p.y)*((float)r.q.y - (float)r.p.y));
                                 for (std::vector<Point2d>::iterator pit = points.begin(); pit != points.end(); pit++) {
-                                    if (CV_IMAGE_ELEM(SWTImage, float, pit->y, pit->x) < 0) {
-                                        CV_IMAGE_ELEM(SWTImage, float, pit->y, pit->x) = length;
-                                    } else {
-                                        CV_IMAGE_ELEM(SWTImage, float, pit->y, pit->x) = std::min(length, CV_IMAGE_ELEM(SWTImage, float, pit->y, pit->x));
-                                    }
+                                   SWTImg->pixel_data[pit->y*w+pit->x] = 0;
                                 }
                                 r.points = points;
                                 rays.push_back(r);
@@ -98,24 +141,10 @@ void strokeWidthTransform (IplImage * edgeImage,
                     }
                 }
             }
-            ptr++;
         }
     }
 
-}
-
-void SWTMedianFilter (IplImage * SWTImage,
-                     std::vector<Ray> & rays) {
-    for (std::vector<Ray>::iterator rit = rays.begin(); rit != rays.end(); rit++) {
-        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
-            pit->SWT = CV_IMAGE_ELEM(SWTImage, float, pit->y, pit->x);
-        }
-        std::sort(rit->points.begin(), rit->points.end(), &Point2dSort);
-        float median = (rit->points[rit->points.size()/2]).SWT;
-        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
-            CV_IMAGE_ELEM(SWTImage, float, pit->y, pit->x) = std::min(pit->SWT, median);
-        }
-    }
+    //SWTMedianFilter(SWTImg, rays );
 
 }
 

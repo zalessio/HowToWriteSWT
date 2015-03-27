@@ -30,6 +30,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
+#include <cassert>
 
 #include <exception>
 
@@ -132,7 +133,6 @@ void normalizeImage (IplImage * input, IplImage * output) {
             ptr++;
         }
     }
-
     float difference = maxVal - minVal;
     for( int row = 0; row < input->height; row++ ){
         const float* ptrin = (const float*)(input->imageData + row * input->widthStep);\
@@ -171,11 +171,13 @@ void save_img(char * s, struct image *input){
 }
 
 void save_and_convert_img(char * s, struct image *input){
-    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_8U, 1 );
+    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_32F, 1 );
     output->imageData = (char *)input->pixel_data;
+    
     normalizeImage (output, output);
     cvConvertScale(output, output, 255, 0);
-    cvSaveImage ( s, output);
+   
+    cvSaveImage(s, output);
     cvReleaseImage(&output);
 }
 

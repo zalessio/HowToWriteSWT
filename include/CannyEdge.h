@@ -33,7 +33,7 @@
 #include <math.h>
 #include <time.h>
 #include "imageio.h"	
-#include "Sobolev.h"
+#include "Sobel.h"
 #include "Gauss.h"
 #include "NonMaxSuppression.h"
 #include "Hysteresis.h"

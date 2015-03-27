@@ -2,7 +2,7 @@
 #define HYSTERESIS_H_
 
 #define LOW_THRESHOLD_PERCENTAGE 0.98 // percentage of the high threshold value that the low threshold shall be set at
-#define HIGH_THRESHOLD_PERCENTAGE 0.05 // percentage of pixels that meet the high threshold - for example 0.15 will ensure that at least 15% of edge pixels are considered to meet the high threshold
+#define HIGH_THRESHOLD_PERCENTAGE 0.02 // percentage of pixels that meet the high threshold - for example 0.15 will ensure that at least 15% of edge pixels are considered to meet the high threshold
 
 #include "imageio.h"	
 
