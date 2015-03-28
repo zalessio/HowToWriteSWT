@@ -8,15 +8,11 @@ Take the makefile from the directory of the version you prefer.
 ```
 make mac_swt
 ```
-```
-
 
 * LINUX
 ```
 make linux_swt
 ```
-```
-
 
 ###Run
 ```
