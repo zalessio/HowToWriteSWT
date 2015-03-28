@@ -9,16 +9,12 @@ Take the makefile from the directory of the version you prefer.
 make mac_swt
 ```
 ```
-(g++ $(pkg-config --cflags --libs opencv) src/TextDetection.cpp src/FeaturesMain.cpp -o bin/SWT)
-```
 
 
 * LINUX
 ```
 make linux_swt
 ```
-```
-(g++ -o bin/SWT src/TextDetection.cpp src/FeaturesMain.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc)
 ```
 
 
