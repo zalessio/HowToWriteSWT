@@ -6,14 +6,17 @@ CC=g++
 LINUX_FLAGS= -lopencv_core -lopencv_highgui -lopencv_imgproc
 MAC_FLAGS= `pkg-config --cflags --libs opencv`
 OPTIM_FLAGS= -O3
-COMP_FILES= DEFAULT/src/FeaturesMain.cpp
+COMP_FILES= versions/$(VERSION)/src/*
 
 # Commands
 linux_swt: $(COMP_FILES)
-	@$(CC) $(COMP_FILES) -o ./DEFAULT/bin/SWT $(MAC_FLAGS)
+	@$(CC) $(COMP_FILES) -o ./bin/SWT_$(VERSION) $(MAC_FLAGS)
 
 mac_swt: $(COMP_FILES)
-	@$(CC) $(MAC_FLAGS) $(COMP_FILES) -o ./DEFAULT/bin/SWT
+	@$(CC) $(MAC_FLAGS) $(COMP_FILES) -o ./bin/SWT_$(VERSION)
 
 clean:
-	@rm ./DEFAULT/bin/SWT
+	@rm ./bin/SWT_$(VERSION)
+
+clean_all:
+	@rm ./bin/*

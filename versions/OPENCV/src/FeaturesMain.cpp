@@ -19,7 +19,7 @@
 */
 #include <cassert>
 #include <fstream>
-#include "TextDetection.h"
+#include "../include/TextDetection.h"
 #include <opencv/highgui.h>
 #include <exception>
 

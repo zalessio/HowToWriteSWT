@@ -28,7 +28,7 @@
 #include <utility>
 #include <algorithm>
 #include <vector>
-#include "TextDetection.h"
+#include "../include/TextDetection.h"
 
 #define PI 3.14159265
 
