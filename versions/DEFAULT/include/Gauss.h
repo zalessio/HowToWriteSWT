@@ -1,17 +1,12 @@
 #ifndef GAUSS_H_
 #define GAUSS_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
 #include "imageio.h"
 
+
 /*
-	GAUSSIAN_NOISE_ REDUCE
-	apply 5x5 Gaussian convolution filter, shrinks the image by 4 pixels in each direction, using Gaussian filter found here:
-	http://en.wikipedia.org/wiki/Canny_edge_detector
+	GAUSSIAN_NOISE_REDUCE
+	apply 5x5 Gaussian convolution filter, shrinks the image by 4 pixels in each direction, using the classical Gaussian 5x5 kernel.
 */
 void gaussian_noise_reduce(struct image * img_in, struct image * img_out)
 {
@@ -53,6 +48,12 @@ void gaussian_noise_reduce(struct image * img_in, struct image * img_out)
 	}
 }
 
+/*
+	GAUSSIAN_NOISE_REDUCE_FLOAT_5
+	apply 5x5 Gaussian convolution filter, shrinks the image by 4 pixels in each direction, using the classical Gaussian 5x5 kernel.
+    The input, and output images are arrays of floats.
+    h,w are the dimensions of the images
+ */
 void gaussian_noise_reduce_float_5(float * img_in, float * img_out, int h, int w)
 {
 	int x, y, max_x, max_y;
@@ -89,6 +90,12 @@ void gaussian_noise_reduce_float_5(float * img_in, float * img_out, int h, int w
 	}
 }
 
+/*
+	GAUSSIAN_NOISE_REDUCE_FLOAT_5
+	apply 5x5 Gaussian convolution filter, shrinks the image by 4 pixels in each direction, using the classical Gaussian 3x3 kernel.
+ The input, and output images are arrays of floats.
+ h,w are the dimensions of the images
+ */
 void gaussian_noise_reduce_float_3(float * img_in, float * img_out, int h, int w)
 {
 	int x, y, max_x, max_y;

@@ -15,23 +15,23 @@
 
 #define PI 3.14159265
 
-void SWTMedianFilter (struct image * SWTImg, std::vector<Ray> & rays) {
-
-    int h = SWTImg->height;
-    int w = SWTImg->width;
-
-    for (std::vector<Ray>::iterator rit = rays.begin(); rit != rays.end(); rit++) {
-        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
-            pit->SWT = SWTImg->pixel_data[pit->y+w*pit->x];
-        }
-        std::sort(rit->points.begin(), rit->points.end(), &Point2dSort);
-        float median = (rit->points[rit->points.size()/2]).SWT;
-        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
-            SWTImg->pixel_data[pit->y+w*pit->x] = std::min(pit->SWT, median);
-        }
-    }
-
-}
+//void SWTMedianFilter (struct image * SWTImg, std::vector<Ray> & rays) {
+//
+//    int h = SWTImg->height;
+//    int w = SWTImg->width;
+//
+//    for (std::vector<Ray>::iterator rit = rays.begin(); rit != rays.end(); rit++) {
+//        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
+//            pit->SWT = SWTImg->pixel_data[pit->y+w*pit->x];
+//        }
+//        std::sort(rit->points.begin(), rit->points.end(), &Point2dSort);
+//        float median = (rit->points[rit->points.size()/2]).SWT;
+//        for (std::vector<Point2d>::iterator pit = rit->points.begin(); pit != rit->points.end(); pit++) {
+//            SWTImg->pixel_data[pit->y+w*pit->x] = std::min(pit->SWT, median);
+//        }
+//    }
+//
+//}
 
 void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
                            bool dark_on_light,

@@ -3,6 +3,7 @@
 
 #include "imageio.h"	
 
+
 /*
 	NON_MAX_SUPPRESSION
 	using the estimates of the Gx and Gy image gradients and the edge direction angle determines whether the magnitude of the gradient assumes a local  maximum in the gradient direction
@@ -11,7 +12,7 @@
 	if the rounded edge direction angle is 90 degrees, checks the east and west directions
 	if the rounded edge direction angle is 135 degrees, checks the northeast and southwest directions
 */
-void non_max_suppression(struct image * img, int *g, int *dir) {//float theta[]) {
+void non_max_suppression(struct image * img, int *g, int *dir) {
 	
 	int w, h, x, y, max_x, max_y;
 	w = img->width;

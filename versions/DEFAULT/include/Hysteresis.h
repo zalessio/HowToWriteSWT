@@ -1,12 +1,13 @@
 #ifndef HYSTERESIS_H_
 #define HYSTERESIS_H_
 
-#define LOW_THRESHOLD_PERCENTAGE 0.98 // percentage of the high threshold value that the low threshold shall be set at
-#define HIGH_THRESHOLD_PERCENTAGE 0.02 // percentage of pixels that meet the high threshold - for example 0.15 will ensure that at least 15% of edge pixels are considered to meet the high threshold
-
 #include "imageio.h"	
 
 
+/*
+	RANGE
+	check if the coordinates are inside the image
+ */
 int range(struct image * img, int x, int y)
 {
 	if ((x < 0) || (x >= img->width)) {
@@ -18,9 +19,13 @@ int range(struct image * img, int x, int y)
 	return(1);
 }
 
+/*
+	TRACE
+	find only the pixels with a gradient magnitudo higher then the low threshold (weak edges) that are in the neighborhood of strong edges
+ */
 int trace(int x, int y, int low, struct image * img_in, struct image * img_out)
 {
-	int y_off, x_off;//, flag;
+	int y_off, x_off;
 	if (img_out->pixel_data[y * img_out->width + x] == 0)
 	{
 		img_out->pixel_data[y * img_out->width + x] = 255;
@@ -29,6 +34,7 @@ int trace(int x, int y, int low, struct image * img_in, struct image * img_out)
 		{
 		    for(x_off = -1; x_off <= 1; x_off++)
 		    {
+                //if the pixel is a weak edge then draw it and control if the neighbors are weak edges
 				if (!(y == 0 && x_off == 0) && range(img_in, x + x_off, y + y_off) && img_in->pixel_data[(y + y_off) * img_out->width + x + x_off] >= low) {
 					if (trace(x + x_off, y + y_off, low, img_in, img_out))
 					{
@@ -42,6 +48,10 @@ int trace(int x, int y, int low, struct image * img_in, struct image * img_out)
 	return(0);
 }
 
+/*
+	HYSTERESIS
+	compute the hysteresis keeping only the pixels with an high gradient magnitudo (strong edges) and then computing the weak edges that are in the neighborhood of these pixel (with the function trace)
+ */
 void hysteresis (int high, int low, struct image * img_in, struct image * img_out)
 {
 	int x, y, n, max,w,h;
@@ -60,7 +70,6 @@ void hysteresis (int high, int low, struct image * img_in, struct image * img_ou
 			}
 		}
 	}
-	
 }
 
 #endif

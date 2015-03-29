@@ -18,7 +18,6 @@
     along with DetectText.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <cassert>
-#include <fstream>
 #include "../include/imageio.h"
 #include "../include/TextDetection.h" 
 

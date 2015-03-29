@@ -1,18 +1,13 @@
 #ifndef SOBEL_H_
 #define SOBEL_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
 #include "imageio.h"
 
+
 /*
-	CALC_GRADIENT_SOBEL
-	calculates the result of the Sobel operator - http://en.wikipedia.org/wiki/Sobel_operator - and estimates edge direction angle
+	GRADIENT_SOBEL_MAGNITUDO_DIRECTION
+	calculates the result of the Sobel operators (applying the Sobel kernels in x and y directions) and estimates gradient magnitudo (g) and direction angle (dir)
 */
-/*void calc_gradient_sobel(struct image * img_in, int g_x[], int g_y[], int g[], int dir[]) {//float theta[]) {*/
 void gradient_sobel_magnitudo_direction(struct image * img_in, int *g , int *dir) {
 	int w, h, x, y, max_x, max_y, g_x, g_y;
 	float g_div;
@@ -20,6 +15,7 @@ void gradient_sobel_magnitudo_direction(struct image * img_in, int *g , int *dir
 	h = img_in->height;
 	max_x = w - 3;
 	max_y = w * (h - 3);
+    
 	for (y = w * 3; y < max_y; y += w) {
 		for (x = 3; x < max_x; x++) {
 			g_x = (2 * img_in->pixel_data[x + y + 1] 
@@ -86,17 +82,19 @@ void gradient_sobel_magnitudo_direction(struct image * img_in, int *g , int *dir
 	}	
 }
 
+/*
+	GRADIENT_SOBEL_MAGNITUDO_DIRECTION
+	calculates the result of the Sobel operators (applying the Sobel kernels in x and y directions) and estimates the two gradients x and y
+ */
 void gradient_sobel_x_y(struct image * img_in, float *g_x, float *g_y) {
 	int w, h, x, y, max_x, max_y;
-
 	w = img_in->width;
 	h = img_in->height;
-	
 	max_x = w - 3;
 	max_y = w * (h - 3);
+    
 	for (y = w * 3; y < max_y; y += w) {
 		for (x = 3; x < max_x; x++) {
-			
 			g_x[x + y]  = 2 * img_in->pixel_data[x + y + 1] 
 				+ img_in->pixel_data[x + y - w + 1]
 				+ img_in->pixel_data[x + y + w + 1]
@@ -110,9 +108,7 @@ void gradient_sobel_x_y(struct image * img_in, float *g_x, float *g_y) {
 				+ 2 * img_in->pixel_data[x + y + w] 
 				+ img_in->pixel_data[x + y + w + 1]
 				+ img_in->pixel_data[x + y + w - 1];
-
 		}
-		
 	}	
 }
 
