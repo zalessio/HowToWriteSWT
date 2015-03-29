@@ -46,9 +46,8 @@ struct Point2dFloat {
 };
 
 struct Ray {
-        Point2d p;
-        Point2d q;
-        std::vector<Point2d> points;
+    int len;
+    Point2d *points;
 };
 
 struct image {
@@ -151,7 +150,7 @@ void normalizeImage (IplImage * input, IplImage * output) {
 
 void convertImg(IplImage * input, struct image *output){
 
-    std::cout << "CREATE IMAGES " << std::endl;
+    printf("CREATE IMAGES");
     // Convert to grayscale
 
     IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
