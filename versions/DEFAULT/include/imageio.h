@@ -30,7 +30,10 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
-#include <cassert>
+#include <assert.h>
+#include <stdio.h>
+// #include <math.h>
+
 
 /* DEFINE STRUCTURES */
 struct Point2d {
@@ -46,7 +49,7 @@ struct Point2dFloat {
 
 struct Ray {
     int len;
-    Point2d *points;
+    struct Point2d *points;
 };
 
 struct image {
@@ -69,7 +72,7 @@ void convertToFloatImage ( IplImage * byteImage, IplImage * floatImage )
 
 IplImage * loadByteImage ( const char * name )
 {
-  IplImage * image = cvLoadImage ( name );
+  IplImage * image = cvLoadImage ( name , 1);
 
   if ( !image )
   {
@@ -90,15 +93,21 @@ void convertImg(IplImage * input, struct image *output){
     output->pixel_data = (unsigned char*)grayImage->imageData;
 }
 
+// using System;
+// using System.IO;
+
 
 void save_img(char * s, struct image *input){
     IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_8U, 1 );
     output->imageData = (char *)input->pixel_data;
-    cvSaveImage (s,output);
+    cvSaveImage (s,output,0);
     cvReleaseImage(&output);
+    // FileStream fs = new FileStream(new FileStream(@s,Filemode.Append,FileAccess.Write));
+    // fs.write(input->pixel_data);
+    // fs.Close();
 }
 
-//
+
 //void save_and_convert_img(char * s, struct image *input){
 //    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_32F, 1 );
 //    output->imageData = (char *)input->pixel_data;

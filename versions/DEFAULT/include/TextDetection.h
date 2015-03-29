@@ -18,8 +18,8 @@
     You should have received a copy of the GNU General Public License
     along with DetectText.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <cassert>
-
+#include <assert.h>
+#include <stdbool.h>
 #include "../include/imageio.h"
 #include "../include/CannyEdge.h"
 #include "../include/Swt.h"

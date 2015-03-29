@@ -1,6 +1,7 @@
 #ifndef CANNYEDGE_H_
 #define CANNYEDGE_H_
 
+#include <stdio.h>
 #include "imageio.h"
 #include "Sobel.h"
 #include "Gauss.h"
@@ -48,7 +49,7 @@ void canny_edge_detect(struct image * img_in, struct image * img_out) {
 
 	free(g);
 	free(dir);
-	
+
 }
 
 #endif

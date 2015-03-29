@@ -1,7 +1,8 @@
 #ifndef SWT_H_
 #define SWT_H_
 
-#include <cmath>
+#include <math.h>
+#include <stdbool.h>
 #include "Sobel.h"
 #include "Gauss.h"
 #include "../include/imageio.h"
@@ -40,8 +41,8 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
     int rays_it = 0;
     int points_dim = w*h/2;
     int points_it = 0;
-    Ray *rays = (Ray *) malloc(rays_dim*sizeof(Ray));
-    Point2d *points = (Point2d *) malloc(points_dim*sizeof(Point2d));
+    struct Ray *rays = (struct Ray *) malloc(rays_dim*sizeof(struct Ray));
+    struct Point2d *points = (struct Point2d *) malloc(points_dim*sizeof(struct Point2d));
 
     struct image gaussianImg;
     gaussianImg.width = w;
@@ -77,7 +78,7 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
                     points_it++;
                 } else {
                     // NOTICE: REALLOC NOT WORKING
-                    points = (Point2d *) realloc(points,2*points_dim*sizeof(Point2d));
+                    points = (struct Point2d *) realloc(points,2*points_dim*sizeof(struct Point2d));
                     points[points_it].x = col; 
                     points[points_it].y = row; 
                     points_it++;
@@ -89,7 +90,7 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
                     rays_it++;
                 } else {
                     // NOTICE: REALLOC NOT WORKING
-                    rays = (Ray *) realloc(rays, 2*rays_dim*sizeof(Ray) );
+                    rays = (struct Ray *) realloc(rays, 2*rays_dim*sizeof(struct Ray) );
                     rays[rays_it].len = 1;
                     rays[rays_it].points = &points[points_it-1];
                     rays_it++;
@@ -129,7 +130,7 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
                             break;
                         }
 
-                        Point2d pnew;
+                        struct Point2d pnew;
                         pnew.x = curPixX;
                         pnew.y = curPixY;
                         rays[rays_it-1].len++;
@@ -139,7 +140,7 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
                             points_it++;
                         } else {
                             // NOTICE: NOT WORKING
-                            points = (Point2d *) realloc(points,2*points_dim*sizeof(Point2d));
+                            points = (struct Point2d *) realloc(points,2*points_dim*sizeof(struct Point2d));
                             points[points_it] = pnew;
                             points_it++;
                         }
@@ -160,7 +161,7 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
 
                             if (acos(G_x * -G_xt + G_y * -G_yt) < PI/2.0) {
                                 for(i=0; i<rays[rays_it-1].len; ++i){
-                                    Point2d tmp = rays[rays_it-1].points[i];
+                                    struct Point2d tmp = rays[rays_it-1].points[i];
                                     SWTImg->pixel_data[tmp.y*w+tmp.x] = 0;   
                                 }
                             } else {

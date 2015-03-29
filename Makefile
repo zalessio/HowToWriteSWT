@@ -9,18 +9,18 @@
 # this Makefile will stay universal.  
 
 # Compiler
-CC=g++
-LINUX_FLAGS= -lopencv_core -lopencv_highgui -lopencv_imgproc
-MAC_FLAGS= `pkg-config --cflags --libs opencv`
+CC=gcc
+LINUX_FLAGS= -lopencv_core -lopencv_highgui -lopencv_imgproc -lm
+MAC_FLAGS= `pkg-config --cflags --libs opencv` -w
 OPTIM_FLAGS= -O3
 COMP_FILES= versions/$(VERSION)/src/*
 
 # Commands
 linux_swt: $(COMP_FILES)
-	@$(CC) $(COMP_FILES) -o ./bin/SWT_$(VERSION) $(MAC_FLAGS)
+	@$(CC) -std=c99 $(COMP_FILES) -o ./bin/SWT_$(VERSION) $(LINUX_FLAGS) -lm
 
 mac_swt: $(COMP_FILES)
-	@$(CC) $(MAC_FLAGS) $(COMP_FILES) -o ./bin/SWT_$(VERSION)
+	@$(CC) -std=c99 $(MAC_FLAGS) $(COMP_FILES) -o ./bin/SWT_$(VERSION)
 
 clean:
 	@rm ./bin/SWT_$(VERSION)
