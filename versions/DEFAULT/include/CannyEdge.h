@@ -19,7 +19,7 @@
  */
 void canny_edge_detect(struct image * img_in, struct image * img_out) {
 	
-	int high, low,h,w;
+	int high,low,h,w;
 	w = img_in->width;
 	h = img_in->height;
 

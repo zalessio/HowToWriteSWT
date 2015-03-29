@@ -45,9 +45,8 @@ struct Point2dFloat {
 };
 
 struct Ray {
-    Point2d p;
-    Point2d q;
-    std::vector<Point2d> points;
+    int len;
+    Point2d *points;
 };
 
 struct image {
