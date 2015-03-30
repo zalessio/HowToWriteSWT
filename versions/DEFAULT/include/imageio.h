@@ -46,30 +46,19 @@ struct Point2dFloat {
     float x;
     float y;
 };
-
+//Ray between two points of the canny edges
 struct Ray {
     int len;
     struct Point2d *points;
 };
-
+//Image structure
 struct image {
     int width;
     int height;
     unsigned char * pixel_data;
 };
 
-
-//bool Point2dSort (const Point2d &lhs, const Point2d &rhs) {
-//    return lhs.SWT < rhs.SWT;
-//}
-
-
-void convertToFloatImage ( IplImage * byteImage, IplImage * floatImage )
-{
-  cvConvertScale ( byteImage, floatImage, 1 / 255., 0 );
-}
-
-
+//load image file to IplImage image
 IplImage * loadByteImage ( const char * name )
 {
   IplImage * image = cvLoadImage ( name , 1);
@@ -82,6 +71,7 @@ IplImage * loadByteImage ( const char * name )
   return image;
 }
 
+//convert from gray img to struct image
 void convertImg(IplImage * input, struct image *output){
     printf("CREATE IMAGES \n");
     IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
@@ -93,20 +83,19 @@ void convertImg(IplImage * input, struct image *output){
     output->pixel_data = (unsigned char*)grayImage->imageData;
 }
 
-// using System;
-// using System.IO;
-
-
+//save the struct image to a image file
 void save_img(char * s, struct image *input){
     IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_8U, 1 );
     output->imageData = (char *)input->pixel_data;
     cvSaveImage (s,output,0);
     cvReleaseImage(&output);
-    // FileStream fs = new FileStream(new FileStream(@s,Filemode.Append,FileAccess.Write));
-    // fs.write(input->pixel_data);
-    // fs.Close();
 }
 
+
+//void convertToFloatImage ( IplImage * byteImage, IplImage * floatImage )
+//{
+//  cvConvertScale ( byteImage, floatImage, 1 / 255., 0 );
+//}
 
 //void save_and_convert_img(char * s, struct image *input){
 //    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_32F, 1 );
@@ -183,6 +172,10 @@ void save_img(char * s, struct image *input){
 //  cvConvertScale ( image, floatingImage, 1 / 255., 0 );
 //  cvReleaseImage ( &image );
 //  return floatingImage;
+//}
+
+//bool Point2dSort (const Point2d &lhs, const Point2d &rhs) {
+//    return lhs.SWT < rhs.SWT;
 //}
 
 
