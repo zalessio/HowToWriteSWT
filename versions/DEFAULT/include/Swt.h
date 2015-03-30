@@ -36,11 +36,13 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
     int w = grayImg->width;
 
     int i,y,x,row,col;
-
+    
+    //TODO dummy dimension
     int rays_dim = w*h/200;
     int rays_it = 0;
     int points_dim = w*h/2;
     int points_it = 0;
+    
     struct Ray *rays = (struct Ray *) malloc(rays_dim*sizeof(struct Ray));
     struct Point2d *points = (struct Point2d *) malloc(points_dim*sizeof(struct Point2d));
 
