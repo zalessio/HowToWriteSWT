@@ -20,43 +20,52 @@
 */
 #include <assert.h>
 #include <stdbool.h>
-#include "../include/imageio.h"
-#include "../include/CannyEdge.h"
-#include "../include/Swt.h"
+#include "ImageIO.h"
+#include "CannyEdge.h"
+#include "Swt.h"
 
 
-void textDetection (IplImage * input, bool dark_on_light)
-{   
-
-    assert ( input->depth == IPL_DEPTH_8U );
-    assert ( input->nChannels == 3 );
+void textDetection (IplImage * inputImage, bool dark_on_light)
+{
+    assert ( inputImage->depth == IPL_DEPTH_8U );
+    assert ( inputImage->nChannels == 3 );
+    
     printf("Running textDetection with dark_on_light %d\n", dark_on_light);
     
     int h,w;
-    struct image grayImg,edgeImg,swtImg;
-    convertImg(input, &grayImg);
-    h = grayImg.height;
-    w = grayImg.width;
+    struct Image grayImg,grayImg2,edgeImg,swtImg;
+    
+    printf("CREATE IMAGES \n");
+    h = inputImage->height;
+    w = inputImage->width;
+    grayImg.width = w;
+    grayImg.height = h;
+    grayImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
+    grayImg2.width = w;
+    grayImg2.height = h;
+    grayImg2.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
     swtImg.width = w;
     swtImg.height = h;
     swtImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
     edgeImg.width = w;
     edgeImg.height = h;
     edgeImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));
+    printf("CONVERT INPUT IMAGE \n");
+    convertImg(inputImage, &grayImg);
+    convertImg(inputImage, &grayImg2);
 
     //Canny Image
     printf("CANNY EDGE\n");
     canny_edge_detect(&grayImg, &edgeImg);
     save_img((char *)"imgs/DEFAULT_canny.png",&edgeImg);
 
-    convertImg(input, &grayImg);
-    //SWT 
+    //SWT
     printf("SWT\n");
-    strokeWidthTransform(&grayImg,&edgeImg,dark_on_light,&swtImg);
+    strokeWidthTransform(&grayImg2,&edgeImg,dark_on_light,&swtImg);
 
     save_img((char *)"imgs/DEFAULT_SWT.png",&swtImg);
     
-    //free(grayImg.pixel_data);
+    free(grayImg.pixel_data);
     free(swtImg.pixel_data);
     free(edgeImg.pixel_data);
 }

@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "Sobel.h"
 #include "Gauss.h"
-#include "../include/imageio.h"
+#include "ImageIO.h"
 
 
 #define PI 3.14159265
@@ -28,9 +28,9 @@
 
 // }
 
-void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
+void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
                            bool dark_on_light,
-                           struct image * SWTImg) {
+                           struct Image * SWTImg) {
 
     int h = grayImg->height;
     int w = grayImg->width;
@@ -44,7 +44,7 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
     struct Ray *rays = (struct Ray *) malloc(rays_dim*sizeof(struct Ray));
     struct Point2d *points = (struct Point2d *) malloc(points_dim*sizeof(struct Point2d));
 
-    struct image gaussianImg;
+    struct Image gaussianImg;
     gaussianImg.width = w;
     gaussianImg.height = h;
     gaussianImg.pixel_data = (unsigned char *)malloc(w * h * sizeof(unsigned char));

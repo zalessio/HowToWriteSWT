@@ -1,14 +1,14 @@
 #ifndef GAUSS_H_
 #define GAUSS_H_
 
-#include "imageio.h"
+#include "ImageIO.h"
 
 
 /*
 	GAUSSIAN_NOISE_REDUCE
 	apply 5x5 Gaussian convolution filter, shrinks the image by 4 pixels in each direction, using the classical Gaussian 5x5 kernel.
 */
-void gaussian_noise_reduce(struct image * img_in, struct image * img_out)
+void gaussian_noise_reduce(struct Image * img_in, struct Image * img_out)
 {
 	int w, h, x, y, max_x, max_y;
 	w = img_in->width;

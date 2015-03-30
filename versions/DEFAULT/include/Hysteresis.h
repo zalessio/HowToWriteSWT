@@ -1,14 +1,14 @@
 #ifndef HYSTERESIS_H_
 #define HYSTERESIS_H_
 
-#include "imageio.h"	
+#include "ImageIO.h"
 
 
 /*
 	RANGE
 	check if the coordinates are inside the image
  */
-int range(struct image * img, int x, int y)
+int range(struct Image * img, int x, int y)
 {
 	if ((x < 0) || (x >= img->width)) {
 		return(0);
@@ -23,7 +23,7 @@ int range(struct image * img, int x, int y)
 	TRACE
 	find only the pixels with a gradient magnitudo higher then the low threshold (weak edges) that are in the neighborhood of strong edges
  */
-int trace(int x, int y, int low, struct image * img_in, struct image * img_out)
+int trace(int x, int y, int low, struct Image * img_in, struct Image * img_out)
 {
 	int y_off, x_off;
 	if (img_out->pixel_data[y * img_out->width + x] == 0)
@@ -52,7 +52,7 @@ int trace(int x, int y, int low, struct image * img_in, struct image * img_out)
 	HYSTERESIS
 	compute the hysteresis keeping only the pixels with an high gradient magnitudo (strong edges) and then computing the weak edges that are in the neighborhood of these pixel (with the function trace)
  */
-void hysteresis (int high, int low, struct image * img_in, struct image * img_out)
+void hysteresis (int high, int low, struct Image * img_in, struct Image * img_out)
 {
 
 	int x, y, n, max,w,h;

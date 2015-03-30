@@ -2,7 +2,7 @@
 #define CANNYEDGE_H_
 
 #include <stdio.h>
-#include "imageio.h"
+#include "ImageIO.h"
 #include "Sobel.h"
 #include "Gauss.h"
 #include "NonMaxSuppression.h"
@@ -18,13 +18,13 @@
 	otherwise the required intermediate arrays will be dynamically allocated.
 	If WIDTH and HEIGHT are defined, the arrays will be allocated in the compiler directive that follows:
  */
-void canny_edge_detect(struct image * img_in, struct image * img_out) {
+void canny_edge_detect(struct Image * img_in, struct Image * img_out) {
 	
 	int high,low,h,w;
 	w = img_in->width;
 	h = img_in->height;
 
-	struct image img_scratch;
+	struct Image img_scratch;
 	img_scratch.width = w;
 	img_scratch.height = h;
 	img_scratch.pixel_data = img_in->pixel_data;

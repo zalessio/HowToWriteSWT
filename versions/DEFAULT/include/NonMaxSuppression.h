@@ -1,7 +1,7 @@
 #ifndef NONMAXSUPPRESSION_H_
 #define NONMAXSUPPRESSION_H_
 
-#include "imageio.h"	
+#include "ImageIO.h"
 
 
 /*
@@ -12,7 +12,7 @@
 	if the rounded edge direction angle is 90 degrees, checks the east and west directions
 	if the rounded edge direction angle is 135 degrees, checks the northeast and southwest directions
 */
-void non_max_suppression(struct image * img, int *g, int *dir) {
+void non_max_suppression(struct Image * img, int *g, int *dir) {
 	
 	int w, h, x, y, max_x, max_y;
 	w = img->width;

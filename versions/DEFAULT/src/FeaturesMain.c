@@ -19,8 +19,8 @@
 */
 #include <assert.h>
 #include <stdio.h>
-#include "../include/imageio.h"
-#include "../include/TextDetection.h" 
+#include "../include/ImageIO.h"
+#include "../include/TextDetection.h"
 
 
 

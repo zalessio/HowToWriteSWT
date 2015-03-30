@@ -36,12 +36,12 @@
 
 
 /* DEFINE STRUCTURES */
+//Points
 struct Point2d {
     int x;
     int y;
     float SWT;
 };
-
 struct Point2dFloat {
     float x;
     float y;
@@ -52,44 +52,60 @@ struct Ray {
     struct Point2d *points;
 };
 //Image structure
-struct image {
+struct Image {
     int width;
     int height;
     unsigned char * pixel_data;
 };
 
-//load image file to IplImage image
+//load Image file to IplImage Image
 IplImage * loadByteImage ( const char * name )
 {
-  IplImage * image = cvLoadImage ( name , 1);
+  IplImage * inOutImage = cvLoadImage ( name , 1);
 
-  if ( !image )
+  if ( !inOutImage )
   {
     return 0;
   }
-  cvCvtColor ( image, image, CV_BGR2RGB );
-  return image;
+  cvCvtColor ( inOutImage, inOutImage, CV_BGR2RGB );
+  return inOutImage;
 }
 
 //convert from gray img to struct image
-void convertImg(IplImage * input, struct image *output){
-    printf("CREATE IMAGES \n");
-    IplImage * grayImage = cvCreateImage ( cvGetSize ( input ), IPL_DEPTH_8U, 1 );
+void convertImg(IplImage * inputImage, struct Image *outputImg){
+    
+    IplImage * grayImage = cvCreateImage ( cvGetSize ( inputImage ), IPL_DEPTH_8U, 1 );
     //convert to grayscale
-    cvCvtColor ( input, grayImage, CV_RGB2GRAY );
+    cvCvtColor ( inputImage, grayImage, CV_RGB2GRAY );
+   
     //create output
-    output->width = input->width;
-    output->height = input->height;
-    output->pixel_data = (unsigned char*)grayImage->imageData;
+    int w = grayImage->width;
+    int h = grayImage->height;
+   
+    for (int y = 0; y < h; y++) {
+        for (int x = 0; x < w; x++) {
+            outputImg->pixel_data[x+w*y] = grayImage->imageData[x+w*y];
+        }
+    }
+    
+    cvReleaseImage(&grayImage);
+
 }
 
 //save the struct image to a image file
-void save_img(char * s, struct image *input){
-    IplImage * output = cvCreateImage( cvSize (input->width,input->height),IPL_DEPTH_8U, 1 );
-    output->imageData = (char *)input->pixel_data;
-    cvSaveImage (s,output,0);
-    cvReleaseImage(&output);
+void save_img(char * s, struct Image *inputImg){
+    IplImage * outputImage = cvCreateImage( cvSize (inputImg->width,inputImg->height),IPL_DEPTH_8U, 1 );
+    outputImage->imageData = (char *)inputImg->pixel_data;
+    cvSaveImage (s,outputImage,0);
+    cvReleaseImage(&outputImage);
 }
+
+
+
+
+
+
+
 
 
 //void convertToFloatImage ( IplImage * byteImage, IplImage * floatImage )
