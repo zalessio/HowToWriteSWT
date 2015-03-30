@@ -179,7 +179,11 @@ void strokeWidthTransform (struct image * grayImg, struct image * edgeImg,
 
     free(rays);
     free(points);
-    //SWTMedianFilter(SWTImg, rays );
+    free(gradientXtemp);
+    free(gradientYtemp);
+    free(gradientX);
+    free(gradientY);
+    free(gaussianImg.pixel_data);
     return;
 }
 

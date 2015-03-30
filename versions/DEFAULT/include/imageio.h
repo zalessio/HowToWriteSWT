@@ -81,6 +81,7 @@ void convertImg(IplImage * input, struct image *output){
     output->width = input->width;
     output->height = input->height;
     output->pixel_data = (unsigned char*)grayImage->imageData;
+    cvReleaseImage(&grayImage);
 }
 
 //save the struct image to a image file

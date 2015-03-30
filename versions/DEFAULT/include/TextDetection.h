@@ -55,7 +55,10 @@ void textDetection (IplImage * input, bool dark_on_light)
     strokeWidthTransform(&grayImg,&edgeImg,dark_on_light,&swtImg);
 
     save_img((char *)"imgs/DEFAULT_SWT.png",&swtImg);
-
+    
+    free(grayImg.pixel_data);
+    free(swtImg.pixel_data);
+    free(edgeImg.pixel_data);
 }
 
 #endif
