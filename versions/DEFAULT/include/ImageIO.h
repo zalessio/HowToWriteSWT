@@ -79,11 +79,12 @@ void convertImg(IplImage * inputImage, struct Image *outputImg){
     cvCvtColor ( inputImage, grayImage, CV_RGB2GRAY );
    
     //create output
-    int w = grayImage->width;
-    int h = grayImage->height;
+    int w,h,y,x;
+    w = grayImage->width;
+    h = grayImage->height;
    
-    for (int y = 0; y < h; y++) {
-        for (int x = 0; x < w; x++) {
+    for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
             outputImg->pixel_data[x+w*y] = grayImage->imageData[x+w*y];
         }
     }

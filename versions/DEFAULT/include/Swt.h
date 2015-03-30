@@ -35,7 +35,7 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
     int h = grayImg->height;
     int w = grayImg->width;
 
-    int i;
+    int i,y,x,row,col;
 
     int rays_dim = w*h/200;
     int rays_it = 0;
@@ -60,16 +60,16 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
     gaussian_noise_reduce_float_5(gradientYtemp,gradientY,h,w);
     
     printf("*** initializing SWT image ***\n");
-    for(int y = 0; y < h; y++ ){
-        for (int x = 0; x < w; x++ ){
+    for(y = 0; y < h; y++ ){
+        for (x = 0; x < w; x++ ){
             SWTImg->pixel_data[x+w*y] = 255;
         }
     }
     
     printf("*** finding rays ***\n");
     float prec = .05;
-    for( int row = 0; row < h; row++ ){
-        for ( int col = 0; col < w; col++ ){
+    for(row = 0; row < h; row++ ){
+        for (col = 0; col < w; col++ ){
             if (edgeImg->pixel_data[row*w + col] > 0) {
 
                 if(points_it<points_dim) {

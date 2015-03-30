@@ -9,7 +9,12 @@
 # this Makefile will stay universal.  
 
 # Compiler
+ifeq ($(VERSION),OPENCV)
+CC=g++
+else
 CC=gcc
+endif
+
 LINUX_FLAGS= -lopencv_core -lopencv_highgui -lopencv_imgproc -lm
 MAC_FLAGS= `pkg-config --cflags --libs opencv` -w
 OPTIM_FLAGS= -O3
@@ -20,7 +25,7 @@ linux_swt: $(COMP_FILES)
 	@$(CC) -std=c99 $(COMP_FILES) -o ./bin/SWT_$(VERSION) $(LINUX_FLAGS) -lm
 
 mac_swt: $(COMP_FILES)
-	@$(CC) -std=c99 $(MAC_FLAGS) $(COMP_FILES) -o ./bin/SWT_$(VERSION)
+	@$(CC) $(MAC_FLAGS) $(COMP_FILES) -o ./bin/SWT_$(VERSION)
 
 clean:
 	@rm ./bin/SWT_$(VERSION)
