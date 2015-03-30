@@ -34,7 +34,7 @@ void textDetection (IplImage * input, bool dark_on_light)
     
     int h,w;
     struct image grayImg,edgeImg,swtImg;
-    convertImg(input, &grayImg);
+    grayImg.pixel_data = convertImg(input);
     h = grayImg.height;
     w = grayImg.width;
     swtImg.width = w;
@@ -49,8 +49,8 @@ void textDetection (IplImage * input, bool dark_on_light)
     canny_edge_detect(&grayImg, &edgeImg);
     save_img((char *)"imgs/DEFAULT_canny.png",&edgeImg);
 
-    convertImg(input, &grayImg);
-    //SWT 
+    grayImg.pixel_data = convertImg(input);
+    //SWT
     printf("SWT\n");
     strokeWidthTransform(&grayImg,&edgeImg,dark_on_light,&swtImg);
 
