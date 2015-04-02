@@ -36,11 +36,13 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
     int w = grayImg->width;
 
     int i,y,x,row,col;
-
-    int rays_dim = w*h/200;
+    
+    //TODO dummy dimension
+    int rays_dim = w*h;
     int rays_it = 0;
-    int points_dim = w*h/2;
+    int points_dim = w*h;
     int points_it = 0;
+    
     struct Ray *rays = (struct Ray *) malloc(rays_dim*sizeof(struct Ray));
     struct Point2d *points = (struct Point2d *) malloc(points_dim*sizeof(struct Point2d));
 
@@ -78,6 +80,7 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
                     points_it++;
                 } else {
                     // NOTICE: REALLOC NOT WORKING
+                    printf("NOTICE: REALLOC Points2d NOT WORKING\n");
                     points = (struct Point2d *) realloc(points,2*points_dim*sizeof(struct Point2d));
                     points[points_it].x = col; 
                     points[points_it].y = row; 
@@ -90,6 +93,7 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
                     rays_it++;
                 } else {
                     // NOTICE: REALLOC NOT WORKING
+                    printf("NOTICE: REALLOC Rays NOT WORKING\n");
                     rays = (struct Ray *) realloc(rays, 2*rays_dim*sizeof(struct Ray) );
                     rays[rays_it].len = 1;
                     rays[rays_it].points = &points[points_it-1];
@@ -140,6 +144,7 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
                             points_it++;
                         } else {
                             // NOTICE: NOT WORKING
+                            printf("NOTICE: REALLOC Points2d NOT WORKING\n");
                             points = (struct Point2d *) realloc(points,2*points_dim*sizeof(struct Point2d));
                             points[points_it] = pnew;
                             points_it++;
@@ -175,7 +180,6 @@ void strokeWidthTransform (struct Image * grayImg, struct Image * edgeImg,
             }
         }
     }
-
 
     free(rays);
     free(points);
