@@ -22,7 +22,7 @@ COMP_FILES= versions/$(VERSION)/src/*
 
 # Commands
 linux_swt: $(COMP_FILES)
-	@$(CC) -std=c99 $(COMP_FILES) -o ./bin/SWT_$(VERSION) $(LINUX_FLAGS) -lm
+	@$(CC) $(COMP_FILES) -o ./bin/SWT_$(VERSION) $(LINUX_FLAGS) -lm
 
 mac_swt: $(COMP_FILES)
 	@$(CC) $(MAC_FLAGS) $(COMP_FILES) -o ./bin/SWT_$(VERSION)

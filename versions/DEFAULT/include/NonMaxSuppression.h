@@ -6,22 +6,24 @@
 
 /*
 	NON_MAX_SUPPRESSION
-	using the estimates of the Gx and Gy image gradients and the edge direction angle determines whether the magnitude of the gradient assumes a local  maximum in the gradient direction
+	using the estimates of the Gx and Gy image gradients and the edge direction angle determines whether
+	the magnitude of the gradient assumes a local  maximum in the gradient direction
 	if the rounded edge direction angle is 0 degrees, checks the north and south directions
 	if the rounded edge direction angle is 45 degrees, checks the northwest and southeast directions
 	if the rounded edge direction angle is 90 degrees, checks the east and west directions
 	if the rounded edge direction angle is 135 degrees, checks the northeast and southwest directions
 */
+
 void non_max_suppression(struct Image * img, int *g, int *dir) {
 	
 	int w, h, x, y, max_x, max_y;
 	w = img->width;
 	h = img->height;
 	
-	max_x = w;
-	max_y = w * h;
-	for (y = 0; y < max_y; y += w) {
-		for (x = 0; x < max_x; x++) {
+	max_x = w - 1;
+	max_y = w * h - w;
+	for (y = w; y < max_y; y += w) {
+		for (x = 1; x < max_x; x++) {
 			switch (dir[x + y]) {
 				case 0:
 					if (g[x + y] > g[x + y - w] && g[x + y] > g[x + y + w]) {
